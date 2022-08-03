@@ -13,25 +13,17 @@ import PrimaryButton from '../components/buttons/PrimaryButton'
 import Note from '../components/items/Note'
 
 function HomePage() {
+  const [notes, setNotes] = useState([]);
+  useEffect(() => {
+    setNotes(getInitialData())
+  }, []);
+
   const [activeNotes, setActiveNotes] = useState([])
   const [archivedNotes, setArchivedNotes] = useState([])
-
-  const setActiveData = () => {
-    const activeNotesData = getInitialData().filter(
-      (item) => item.archived == false
-    )
-    setActiveNotes(activeNotesData)
-  }
-
-  const setArchiveData = () => {
-    const archivedNotesData = getInitialData().filter(
-      (item) => item.archived == true
-    )
-    setArchivedNotes(archivedNotesData)
-  }
-
-  useEffect(setActiveData, [])
-  useEffect(setArchiveData, [])
+  useEffect(() => {
+    setActiveNotes(notes.filter(note => note.archived === false));
+    setArchivedNotes(notes.filter(note => note.archived === true));
+  }, [notes]);
 
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
@@ -46,18 +38,20 @@ function HomePage() {
 
   const resetNotes = () => {
     setSearchKeyword('')
-    setActiveData();
-    setArchiveData();
+    setActiveNotes(notes.filter((item) => item.archived === false))
+    setArchivedNotes(notes.filter((item) => item.archived === true))
   }
 
   const insertNote = () => {
     const newNote = {
       id: Date.now(),
       title: title,
-      content: content,
-      archived: archive,
-      date: new Date().toISOString()
+      body: content,
+      createdAt: new Date().toISOString(),
+      archived: archive
     };
+
+    setNotes([...notes, newNote]);
   }
 
   const filterNotes = () => {
@@ -79,9 +73,21 @@ function HomePage() {
     }
   }
 
-  const deleteNote = () => {}
+  const deleteNoteHandler = (id) => {
+    const newestNotes = notes.filter(note => note.id !== id);
+    setNotes(newestNotes);
+  }
 
-  const archiveNote = () => {}
+  const changeNoteStatusHandler = (id) => {
+    const updatedNote = notes.map(note => {
+      if (note.id === id) {
+        note.archived = !note.archived;
+      }
+      return note;
+    });
+
+    setNotes(updatedNote);
+  }
 
   return (
     <main className="mx-auto w-3/5 py-5">
@@ -157,6 +163,8 @@ function HomePage() {
                   content={note.body}
                   date={showFormattedDate(note.createdAt)}
                   archived={note.archived}
+                  deleteHandler={deleteNoteHandler}
+                  archiveHandler={changeNoteStatusHandler}
                 />
               )
             })}
@@ -178,6 +186,8 @@ function HomePage() {
                   content={note.body}
                   date={showFormattedDate(note.createdAt)}
                   archived={note.archived}
+                  deleteHandler={deleteNoteHandler}
+                  archiveHandler={changeNoteStatusHandler}
                 />
               )
             })}
