@@ -1,7 +1,16 @@
 import Card from '../Card'
 import PrimaryButton from '../buttons/PrimaryButton'
 
-function Note({ id, title, content, date, archived, className = '', deleteHandler, archiveHandler }) {
+function Note({
+  id,
+  title,
+  content,
+  date,
+  archived,
+  className = '',
+  deleteHandler,
+  archiveHandler,
+}) {
   return (
     <Card className={`flex flex-col bg-white ${className}`} header={false}>
       <h4 className="text-lg font-bold text-green-700">{title}</h4>
@@ -11,7 +20,7 @@ function Note({ id, title, content, date, archived, className = '', deleteHandle
         <PrimaryButton
           id={id}
           description={'Delete'}
-          className="flex-1 bg-red-600"
+          className="flex-1 bg-red-600 text-white"
           onClick={() => deleteHandler(id)}
         />
         <PrimaryButton
