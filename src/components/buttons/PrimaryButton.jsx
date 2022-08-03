@@ -1,4 +1,4 @@
-function PrimaryButton({
+const PrimaryButton = ({
   id,
   description,
   className,
@@ -6,7 +6,7 @@ function PrimaryButton({
   onClick,
   onSubmit,
   disabled,
-}) {
+}) => {
   return (
     <button
       id={id}

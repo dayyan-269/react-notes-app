@@ -1,4 +1,4 @@
-function Card({ children, className = '', header = true, headerCaption }) {
+const Card = ({ children, className = '', header = true, headerCaption }) => {
   return (
     <div className={`rounded px-6 py-5 shadow-lg ${className}`}>
       {header ? (

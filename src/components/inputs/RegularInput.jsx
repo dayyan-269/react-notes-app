@@ -1,11 +1,11 @@
-function RegularInput({
+const RegularInput = ({
   description,
   type,
   className = '',
   isRequired = false,
   onChange,
   value,
-}) {
+}) => {
   return (
     <input
       type={type}

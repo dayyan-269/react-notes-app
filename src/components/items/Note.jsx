@@ -1,15 +1,15 @@
 import Card from '../Card'
 import PrimaryButton from '../buttons/PrimaryButton'
 
-function Note({
+const Note = ({
   id,
   title,
   content,
   date,
   className = '',
   deleteHandler,
-  archiveHandler,
-}) {
+  changeStatusHandler,
+}) => {
   return (
     <Card className={`flex flex-col bg-white ${className}`} header={false}>
       <h4 className="text-lg font-bold text-green-700">{title}</h4>
@@ -26,7 +26,7 @@ function Note({
           id={id}
           description={'Change Status'}
           className="flex-1 bg-yellow-400 text-black"
-          onClick={() => archiveHandler(id)}
+          onClick={() => changeStatusHandler(id)}
         />
       </div>
     </Card>

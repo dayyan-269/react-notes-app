@@ -1,10 +1,10 @@
-function DeleteButton({
+const DeleteButton = ({
   description,
   className,
   type = 'button',
   onclick,
   id,
-}) {
+}) => {
   return (
     <button
       id={id}

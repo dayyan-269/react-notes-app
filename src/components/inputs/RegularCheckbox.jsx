@@ -1,4 +1,4 @@
-function RegularCheckbox({ description, checked, onChange }) {
+const RegularCheckbox = ({ description, checked, onChange }) => {
   return (
     <div className="flex flex-row gap-2">
       <label htmlFor="check">{description}</label>
