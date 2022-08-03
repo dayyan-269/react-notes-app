@@ -3,7 +3,8 @@ function RegularTextarea({
   cols,
   rows = 5,
   isRequired,
-  className,
+  className = '',
+  onChange
 }) {
   return (
     <textarea
@@ -12,6 +13,7 @@ function RegularTextarea({
       rows={rows}
       placeholder={description}
       required={isRequired}
+      onChange={onChange}
     ></textarea>
   )
 }
