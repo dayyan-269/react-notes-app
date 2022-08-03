@@ -10,7 +10,7 @@ const SearchSection = ({
 }) => {
   return (
     <section aria-label="search form">
-      <Card className="mt-5 bg-white" headerCaption={'Catalog'}>
+      <Card className="mt-5 bg-white" headerCaption={'Search'}>
         <form method="GET">
           <div className="flex flex-row gap-2">
             <RegularInput
