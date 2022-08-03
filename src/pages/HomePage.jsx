@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { getInitialData, showFormattedDate } from '../utils/data'
 
 //  components
@@ -9,7 +9,7 @@ import RegularCheckbox from '../components/inputs/RegularCheckbox'
 import PrimaryButton from '../components/buttons/PrimaryButton'
 import Note from '../components/items/Note'
 
-function HomePage() {
+const HomePage = () => {
   const [notes, setNotes] = useState([])
 
   useEffect(() => {
@@ -19,7 +19,7 @@ function HomePage() {
   const [activeNotes, setActiveNotes] = useState([])
   const [archivedNotes, setArchivedNotes] = useState([])
 
-  useEffect(() => {
+  useMemo(() => {
     setActiveNotes(notes.filter((note) => note.archived === false))
     setArchivedNotes(notes.filter((note) => note.archived === true))
   }, [notes])
@@ -32,7 +32,13 @@ function HomePage() {
 
   // Event Listener for Input
   const searchInputListener = (e) => setSearchKeyword(e.target.value)
-  const titleInputListener = (e) => setTitle(e.target.value)
+  const titleInputListener = (e) => {
+    const title = e.target.value;
+
+    if (title.length <= titleCount) {
+      setTitle(title);
+    }
+  }
   const contentInputListener = (e) => setContent(e.target.value)
   const archiveCheckListener = (e) => setArchive(e.target.checked)
 
@@ -131,10 +137,10 @@ function HomePage() {
               <PrimaryButton
                 description="Submit"
                 className={`w-fit text-white ${
-                  titleCount - title.length > 0 ? 'bg-green-600' : 'bg-gray-600'
+                  titleCount - title.length >= 0 ? 'bg-green-600' : 'bg-gray-600'
                 }`}
                 type="submit"
-                disabled={titleCount - title.length > 0 ? false : true}
+                disabled={titleCount - title.length >= 0 ? false : true}
               />
             </div>
           </form>
