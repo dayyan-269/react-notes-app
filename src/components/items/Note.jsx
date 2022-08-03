@@ -1,7 +1,7 @@
 import Card from '../Card'
 import PrimaryButton from '../buttons/PrimaryButton'
 
-function Note({ id, title, content, date, archived, className = '' }) {
+function Note({ id, title, content, date, archived, className = '', deleteHandler, archiveHandler }) {
   return (
     <Card className={`flex flex-col bg-white ${className}`} header={false}>
       <h4 className="text-lg font-bold text-green-700">{title}</h4>
@@ -12,11 +12,13 @@ function Note({ id, title, content, date, archived, className = '' }) {
           id={id}
           description={'Delete'}
           className="flex-1 bg-red-600"
+          onClick={() => deleteHandler(id)}
         />
         <PrimaryButton
           id={id}
-          description={'Archived'}
+          description={'Change Status'}
           className="flex-1 bg-yellow-400 text-black"
+          onClick={() => archiveHandler(id)}
         />
       </div>
     </Card>
