@@ -1,13 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
-import { getInitialData, showFormattedDate } from '../utils/data'
+import { getInitialData } from '../utils/data'
 
 //  components
-import Card from '../components/Card'
-import RegularInput from '../components/inputs/RegularInput'
-import RegularTextarea from '../components/inputs/RegularTextarea'
-import RegularCheckbox from '../components/inputs/RegularCheckbox'
-import PrimaryButton from '../components/buttons/PrimaryButton'
-import Note from '../components/items/Note'
+import InputSection from '../components/sections/InputSection'
+import SearchSection from '../components/sections/SearchSection'
+import NotesSection from '../components/sections/NotesSection'
 
 const HomePage = () => {
   const [notes, setNotes] = useState([])
@@ -33,10 +30,10 @@ const HomePage = () => {
   // Event Listener for Input
   const searchInputListener = (e) => setSearchKeyword(e.target.value)
   const titleInputListener = (e) => {
-    const title = e.target.value;
+    const title = e.target.value
 
     if (title.length <= titleCount) {
-      setTitle(title);
+      setTitle(title)
     }
   }
   const contentInputListener = (e) => setContent(e.target.value)
@@ -106,123 +103,34 @@ const HomePage = () => {
 
   return (
     <main className="mx-auto w-3/5 py-5">
-      <section aria-label="input form">
-        <Card className="bg-white" headerCaption={'Insert New Data'}>
-          <form onSubmit={(e) => insertNote(e)}>
-            <div className="flex flex-col gap-3">
-              <p className="text-end">
-                {titleCount - title.length >= 0 ? titleCount - title.length : 0}{' '}
-                character(s) remaining
-              </p>
-              <RegularInput
-                description="Title"
-                type="text"
-                className="w-full"
-                isRequired={true}
-                value={title}
-                onChange={titleInputListener}
-              />
-              <RegularTextarea
-                description="Content"
-                className="w-full"
-                isRequired={true}
-                value={content}
-                onChange={contentInputListener}
-              />
-              <RegularCheckbox
-                description="Is it archived?"
-                checked={archive}
-                onChange={archiveCheckListener}
-              />
-              <PrimaryButton
-                description="Submit"
-                className={`w-fit text-white ${
-                  titleCount - title.length >= 0 ? 'bg-green-600' : 'bg-gray-600'
-                }`}
-                type="submit"
-                disabled={titleCount - title.length >= 0 ? false : true}
-              />
-            </div>
-          </form>
-        </Card>
-      </section>
-      <section aria-label="search form">
-        <Card className="mt-5 bg-white" headerCaption={'Catalog'}>
-          <form method="GET">
-            <div className="flex flex-row gap-2">
-              <RegularInput
-                description="Search"
-                isRequired={true}
-                className="flex-[10]"
-                value={searchKeyword}
-                onChange={searchInputListener}
-              />
-              <PrimaryButton
-                onClick={filterNotes}
-                description={'Search'}
-                className="h-fit flex-1 bg-green-600 text-white"
-                type={'button'}
-              />
-              <PrimaryButton
-                description={'Reset'}
-                className={`border-1 h-fit flex-1 text-white ${
-                  searchKeyword
-                    ? 'cursor-pointer bg-blue-400'
-                    : 'cursor-not-allowed bg-gray-600'
-                }`}
-                disabled={searchKeyword ? false : true}
-                onClick={resetNotes}
-              />
-            </div>
-          </form>
-        </Card>
-      </section>
-      <section aria-label="catalog active" className="mt-3">
-        <h4 className="text-lg font-bold">Active Notes</h4>
-        {activeNotes.length > 0 ? (
-          <div className="mt-3 grid grid-cols-2 gap-4">
-            {activeNotes.map((note) => {
-              return (
-                <Note
-                  id={note.id}
-                  key={note.id}
-                  title={note.title}
-                  content={note.body}
-                  date={showFormattedDate(note.createdAt)}
-                  archived={note.archived}
-                  deleteHandler={deleteNoteHandler}
-                  archiveHandler={changeNoteStatusHandler}
-                />
-              )
-            })}
-          </div>
-        ) : (
-          <p className="py-3 text-center">There's no active note</p>
-        )}
-      </section>
-      <section aria-label="catalog archived" className="mt-3">
-        <h4 className="text-lg font-bold">Archived Notes</h4>
-        {archivedNotes.length > 0 ? (
-          <div className="mt-3 grid grid-cols-2 gap-4">
-            {archivedNotes.map((note) => {
-              return (
-                <Note
-                  id={note.id}
-                  key={note.id}
-                  title={note.title}
-                  content={note.body}
-                  date={showFormattedDate(note.createdAt)}
-                  archived={note.archived}
-                  deleteHandler={deleteNoteHandler}
-                  archiveHandler={changeNoteStatusHandler}
-                />
-              )
-            })}
-          </div>
-        ) : (
-          <p className="py-3 text-center">There's no archived note</p>
-        )}
-      </section>
+      <InputSection
+        title={title}
+        titleCount={titleCount}
+        titleInputListener={titleInputListener}
+        content={content}
+        contentInputListener={contentInputListener}
+        archive={archive}
+        archiveCheckListener={archiveCheckListener}
+        onSubmit={insertNote}
+      />
+      <SearchSection
+        searchKeyword={searchKeyword}
+        searchInputListener={searchInputListener}
+        filterListener={filterNotes}
+        resetListener={resetNotes}
+      />
+      <NotesSection
+        sectionTitle={'Active Notes'}
+        notes={activeNotes}
+        deleteNoteHandler={deleteNoteHandler}
+        changeNoteStatusHandler={changeNoteStatusHandler}
+      />
+      <NotesSection
+        sectionTitle={'Archived Notes'}
+        notes={archivedNotes}
+        deleteNoteHandler={deleteNoteHandler}
+        changeNoteStatusHandler={changeNoteStatusHandler}
+      />
     </main>
   )
 }
