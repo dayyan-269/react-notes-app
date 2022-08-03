@@ -1,8 +1,5 @@
 import { useEffect, useState } from 'react'
-import {
-  getInitialData,
-  showFormattedDate,
-} from '../utils/data'
+import { getInitialData, showFormattedDate } from '../utils/data'
 
 //  components
 import Card from '../components/Card'
@@ -13,23 +10,24 @@ import PrimaryButton from '../components/buttons/PrimaryButton'
 import Note from '../components/items/Note'
 
 function HomePage() {
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState([])
 
   useEffect(() => {
     setNotes(getInitialData())
-  }, []);
+  }, [])
 
   const [activeNotes, setActiveNotes] = useState([])
   const [archivedNotes, setArchivedNotes] = useState([])
 
   useEffect(() => {
-    setActiveNotes(notes.filter(note => note.archived === false));
-    setArchivedNotes(notes.filter(note => note.archived === true));
-  }, [notes]);
+    setActiveNotes(notes.filter((note) => note.archived === false))
+    setArchivedNotes(notes.filter((note) => note.archived === true))
+  }, [notes])
 
-  const [title, setTitle] = useState(null)
-  const [content, setContent] = useState(null)
+  const [title, setTitle] = useState('')
+  const [content, setContent] = useState('')
   const [archive, setArchive] = useState(false)
+  const [titleCount, setTitleCount] = useState(50)
   const [searchKeyword, setSearchKeyword] = useState('')
 
   // Event Listener for Input
@@ -45,36 +43,38 @@ function HomePage() {
   }
 
   const resetInputForm = () => {
-    setTitle(null);
-    setContent(null);
-    setArchive(false);
+    setTitle('')
+    setContent('')
+    setArchive(false)
   }
 
-  const insertNote = () => {
+  const insertNote = (e) => {
+    e.preventDefault()
+
     const newNote = {
       id: Date.now(),
       title: title,
       body: content,
       createdAt: new Date().toISOString(),
-      archived: archive
-    };
+      archived: archive,
+    }
 
-    setNotes([...notes, newNote]);
-    resetInputForm();
+    setNotes([...notes, newNote])
+    resetInputForm()
   }
 
   const filterNotes = () => {
     const keywordLower = searchKeyword.toLowerCase()
 
     if (keywordLower.length > 0) {
-      const filteredActive = activeNotes.filter((item) => {
+      const filteredActive = notes.filter((item) => {
         const titleLower = item.title.toLowerCase()
-        return titleLower.includes(keywordLower)
+        return titleLower.includes(keywordLower) && item.archived === false
       })
 
-      const filteredArchived = archivedNotes.filter((item) => {
+      const filteredArchived = notes.filter((item) => {
         const titleLower = item.title.toLowerCase()
-        return titleLower.includes(keywordLower)
+        return titleLower.includes(keywordLower) && item.archived === true
       })
 
       setActiveNotes(filteredActive)
@@ -83,46 +83,58 @@ function HomePage() {
   }
 
   const deleteNoteHandler = (id) => {
-    const newestNotes = notes.filter(note => note.id !== id);
-    setNotes(newestNotes);
+    const newestNotes = notes.filter((note) => note.id !== id)
+    setNotes(newestNotes)
   }
 
   const changeNoteStatusHandler = (id) => {
-    const updatedNote = notes.map(note => {
+    const updatedNote = notes.map((note) => {
       if (note.id === id) {
-        note.archived = !note.archived;
+        note.archived = !note.archived
       }
-      return note;
-    });
+      return note
+    })
 
-    setNotes(updatedNote);
+    setNotes(updatedNote)
   }
 
   return (
     <main className="mx-auto w-3/5 py-5">
       <section aria-label="input form">
         <Card className="bg-white" headerCaption={'Insert New Data'}>
-          <form method="post">
+          <form onSubmit={(e) => insertNote(e)}>
             <div className="flex flex-col gap-3">
+              <p className="text-end">
+                {titleCount - title.length >= 0 ? titleCount - title.length : 0}{' '}
+                character(s) remaining
+              </p>
               <RegularInput
                 description="Title"
                 type="text"
                 className="w-full"
                 isRequired={true}
+                value={title}
                 onChange={titleInputListener}
               />
               <RegularTextarea
                 description="Content"
                 className="w-full"
                 isRequired={true}
+                value={content}
                 onChange={contentInputListener}
               />
-              <RegularCheckbox description="Is it archived?" onChange={archiveCheckListener} />
+              <RegularCheckbox
+                description="Is it archived?"
+                checked={archive}
+                onChange={archiveCheckListener}
+              />
               <PrimaryButton
                 description="Submit"
-                className="w-fit"
-                type="button"
-                onClick={insertNote}
+                className={`w-fit text-white ${
+                  titleCount - title.length > 0 ? 'bg-green-600' : 'bg-gray-600'
+                }`}
+                type="submit"
+                disabled={titleCount - title.length > 0 ? false : true}
               />
             </div>
           </form>
@@ -142,12 +154,12 @@ function HomePage() {
               <PrimaryButton
                 onClick={filterNotes}
                 description={'Search'}
-                className="h-fit flex-1"
+                className="h-fit flex-1 bg-green-600 text-white"
                 type={'button'}
               />
               <PrimaryButton
                 description={'Reset'}
-                className={`border-1 h-fit flex-1 ${
+                className={`border-1 h-fit flex-1 text-white ${
                   searchKeyword
                     ? 'cursor-pointer bg-blue-400'
                     : 'cursor-not-allowed bg-gray-600'
