@@ -14,19 +14,21 @@ import Note from '../components/items/Note'
 
 function HomePage() {
   const [notes, setNotes] = useState([]);
+
   useEffect(() => {
     setNotes(getInitialData())
   }, []);
 
   const [activeNotes, setActiveNotes] = useState([])
   const [archivedNotes, setArchivedNotes] = useState([])
+
   useEffect(() => {
     setActiveNotes(notes.filter(note => note.archived === false));
     setArchivedNotes(notes.filter(note => note.archived === true));
   }, [notes]);
 
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
+  const [title, setTitle] = useState(null)
+  const [content, setContent] = useState(null)
   const [archive, setArchive] = useState(false)
   const [searchKeyword, setSearchKeyword] = useState('')
 
@@ -42,6 +44,12 @@ function HomePage() {
     setArchivedNotes(notes.filter((item) => item.archived === true))
   }
 
+  const resetInputForm = () => {
+    setTitle(null);
+    setContent(null);
+    setArchive(false);
+  }
+
   const insertNote = () => {
     const newNote = {
       id: Date.now(),
@@ -52,6 +60,7 @@ function HomePage() {
     };
 
     setNotes([...notes, newNote]);
+    resetInputForm();
   }
 
   const filterNotes = () => {
