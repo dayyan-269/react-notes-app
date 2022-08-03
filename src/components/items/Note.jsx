@@ -6,7 +6,6 @@ function Note({
   title,
   content,
   date,
-  archived,
   className = '',
   deleteHandler,
   archiveHandler,
